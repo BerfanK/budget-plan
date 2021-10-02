@@ -2,7 +2,7 @@
 
 $hostname = "moya.black.host";
 $username = "protecor_nykloon";
-$password = "-";
+$password = "gDU@\$F]f]1+D";
 $database = "protecor_budgetplan";
 
 // Create connection

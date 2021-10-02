@@ -25,5 +25,7 @@
 
     <title>Budgetplan Projekt</title>
 
+    <?php include_once "imports/database.php"; ?>
+    <?php include_once "imports/functions.php"; ?>
     <?php include_once "imports/auth.php"; ?>
 </head>

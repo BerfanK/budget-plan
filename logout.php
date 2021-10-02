@@ -8,5 +8,4 @@ if (isset($_GET["redirect"])) {
 } else {
     header("Location: ./login");
 }
-
 ?>
