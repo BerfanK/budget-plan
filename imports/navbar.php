@@ -19,7 +19,7 @@ if (isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] === true) $loggedIn 
                     <a class="nav-link ps-n5 <?php if ($file == 'index') echo 'current'; ?>" href="./">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link <?php if ($file == 'projects' || $file == 'plan') echo 'current'; ?>" href="./plan">Plan ändern</a>
+                    <a class="nav-link <?php if ($file == 'projects' || $file == 'plan') echo 'current'; ?>" href="./plan">Plan verwalten</a>
                 </li>
             </ul>
 

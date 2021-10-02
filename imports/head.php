@@ -23,5 +23,7 @@
     <link href="assets/css/style.css" rel="stylesheet">
 
 
-    <title>Budgetplan Project</title>
+    <title>Budgetplan Projekt</title>
+
+    <?php include_once "imports/auth.php"; ?>
 </head>
