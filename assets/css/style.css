@@ -41,6 +41,10 @@ body {
   color: #626262;
 }
 
+table * {
+  white-space: nowrap;
+}
+
 .card-title {
   font-family: "Lato", "Yaldevi", "Roboto Condensed", Arial, Helvetica;
   font-size: 19px;
@@ -50,11 +54,20 @@ body {
 
 .card-input {
   display: inline-block;
-  width: 30%;
+  width: 31.5%;
   font-family: "Lato", sans-serif;
   font-weight: bold;
   font-size: 18px;
   margin: 0.2rem 0 0.2rem 0;
+}
+
+.card-budget {
+  display: inline-block;
+  width: 35%;
+  font-family: "Lato", sans-serif;
+  font-weight: bold;
+  font-size: 18px;
+  margin: 0.2rem 0 0.2rem 4rem;
 }
 
 .card-value {
@@ -62,4 +75,19 @@ body {
   font-weight: 400;
   font-size: 18px;
   margin: 0.2rem 0 0.2rem 0;
+}
+
+.balance {
+  display: inline-block;
+  width: 20%;
+  text-align: right;
+}
+
+.month {
+  font-family: "Lato", "Roboto Condensed", Arial, Helvetica;
+  font-weight: 600;
+  font-size: 25px;
+  margin: 2rem 0 2rem 0;
+  text-decoration: underline;
+  text-underline-offset: 0.5rem;
 }
