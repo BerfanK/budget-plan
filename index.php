@@ -13,8 +13,6 @@
 
             <hr class="mt-3 mb-5">
 
-            <div class="month"><code>2021, September</code></div>
-
             <!-- Summary Card -->
             <div class="card-title">Zusammenfassung</div>
             <div class="card mb-5 rounded-0">
