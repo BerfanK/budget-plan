@@ -19,6 +19,18 @@ function print_success($message) {
 }
 
 /**
+ * @param message Prints an success Bootstrap alert
+ */
+function print_success_raw($message) {
+    echo
+    '
+    <div class="text-center text-success" >
+        <strong><i class="far fa-check-circle"></i></strong> '. $message . '
+    </div>
+    ';
+}
+
+/**
  * @param message Prints an danger Bootstrap alert
  */
 function print_danger($message) {
@@ -27,6 +39,18 @@ function print_danger($message) {
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
         <strong><i class="far fa-times-circle"></i></strong> '. $message . '
         <button type="button" class="btn-close shadow-none" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    ';
+}
+
+/**
+ * @param message Prints an danger Bootstrap alert
+ */
+function print_danger_raw($message) {
+    echo
+    '
+    <div class="text-center text-danger" >
+        <strong><i class="far fa-times-circle"></i></strong> '. $message . '
     </div>
     ';
 }
@@ -55,7 +79,7 @@ function login($username, $password) {
         $_SESSION["username"] = $username;
         $_SESSION["email"] = $row['email'];
 
-        print_success("Willkommen zurück <b>$username</b>! Sie werden in 3 Sekunden weitergeleitet.");
+        print_success_raw("Anmeldung erfolgreich, bitte warten.");
 
         echo 
         '
@@ -67,7 +91,7 @@ function login($username, $password) {
         ';
 
     } else { // Password incorrect!
-        print_danger("Der Benutzername oder das Passwort ist nicht korrekt!");
+        print_danger_raw("Benutzername oder Passwort falsch.");
     }
 }
 
@@ -81,17 +105,17 @@ function register($username, $email, $password) {
     global $conn;
 
     if (username_exists($username)) {
-        print_danger("Dieser Benutzername existiert bereits!");
+        print_danger_raw("Benutzername existiert bereits.");
         return;
     }
 
     if (email_exists($email)) {
-        print_danger("Diese Email-Adresse existiert bereits!");
+        print_danger_raw("Email-Adresse existiert bereits.");
         return;
     }
 
     if (strlen($password) <= 8) {
-        print_danger("Das Passwort muss mindestens 8 Zeichen enthalten.");
+        print_danger_raw("Passwort muss mind. 8 Zeichen enthalten.");
         return;
     }
 
@@ -100,8 +124,8 @@ function register($username, $email, $password) {
     $statement = $conn->prepare("INSERT INTO accounts(username, email, password) VALUES(?, ?, ?)");
     $statement->bind_param("sss", $username, $email, $password);
     
-    if ($statement->execute()) print_success("Ihr Account wurde erfolgreich erstellt. Sie können sich nun anmelden.");
-    else print_danger("Ihr Account konnte nicht erstellt werden. Bitte versuchen Sie es später erneut.");
+    if ($statement->execute()) print_success_raw("Account erstellt. Melden Sie sich an.");
+    else print_danger_raw("Account konnte nicht erstellt werden.");
 }
 
 /**

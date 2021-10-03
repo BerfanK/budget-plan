@@ -59,17 +59,31 @@
 
                     <?php
 
-                    while ($incomeObj = $incomeResult->fetch_assoc()) {
-                        $category = $incomeObj['category'];
-                        $balance = $incomeObj['balance'];
+                    if ($incomeResult == null) {
 
                         echo
                         '
                         <div>
-                            <span class="card-input">'. $category .'</span>
-                            <span class="card-value">CHF <span class="balance">'. $balance .'</span></span>
+                            <span class="card-input">Einnahmen</span>
+                            <span class="card-value">CHF <span class="balance">0</span></span>
                         </div>
                         ';
+
+                    } else {
+
+                        while ($incomeObj = $incomeResult->fetch_assoc()) {
+                            $category = $incomeObj['category'];
+                            $balance = $incomeObj['balance'];
+
+                            echo
+                            '
+                            <div>
+                                <span class="card-input">'. $category .'</span>
+                                <span class="card-value">CHF <span class="balance">'. $balance .'</span></span>
+                            </div>
+                            ';
+                        }
+
                     }
 
                     ?>
@@ -107,27 +121,46 @@
 
                             <?php
 
-                            $totalDifference = 0;
-                            while ($outcomeObj = $outcomeResult->fetch_assoc()) {
-                                $category = $outcomeObj['category'];
-                                $budget = $outcomeObj['budget'];
-                                $balance = $outcomeObj['balance'];
-                                
-                                $difference = $budget - $balance;
-                                $totalDifference += $difference;
-                                
-                                $differenceHtml = "text-success";
-                                if ($difference < 0) $differenceHtml = "text-danger";
+                            if ($outcomeResult == null) {
 
                                 echo
                                 '
                                 <tr>
-                                    <td><span class="card-value fw-bold">'. $category .'</span></td>
-                                    <td><span class="card-value">CHF <span class="balance">'. $budget .'</span></span></td>
-                                    <td><span class="card-value">CHF <span class="balance">'. $balance .'</span></span></td>
-                                    <td><span class="card-value '. $differenceHtml .'">CHF <span class="balance">'. $difference .'</span></span></td>
+                                    <td><span class="card-value fw-bold">Ausgaben</span></td>
+                                    <td><span class="card-value">CHF <span class="balance">0</span></span></td>
+                                    <td><span class="card-value">CHF <span class="balance">0</span></span></td>
+                                    <td><span class="card-value">CHF <span class="balance">0</span></span></td>
                                 </tr>
                                 ';
+
+                                $totalDifference = 0;
+
+                            } else {
+
+                                $totalDifference = 0;
+                                while ($outcomeObj = $outcomeResult->fetch_assoc()) {
+                                    $category = $outcomeObj['category'];
+                                    $budget = $outcomeObj['budget'];
+                                    $balance = $outcomeObj['balance'];
+                                    
+                                    $difference = $budget - $balance;
+                                    $totalDifference += $difference;
+                                    
+                                    $differenceHtml = "text-success";
+                                    if ($difference < 0) $differenceHtml = "text-danger";
+                                    if ($difference == 0) $differenceHtml = "";
+
+                                    echo
+                                    '
+                                    <tr>
+                                        <td><span class="card-value fw-bold">'. $category .'</span></td>
+                                        <td><span class="card-value">CHF <span class="balance">'. $budget .'</span></span></td>
+                                        <td><span class="card-value">CHF <span class="balance">'. $balance .'</span></span></td>
+                                        <td><span class="card-value '. $differenceHtml .'">CHF <span class="balance">'. $difference .'</span></span></td>
+                                    </tr>
+                                    ';
+                                }
+
                             }
 
                             ?>

@@ -7,17 +7,6 @@
 
         <div class="container justify-between" style="margin-top: 10rem;">
 
-            <?php
-
-            if (isset($_POST["submit"]) && isset($_POST["username"]) && isset($_POST["email"]) && isset($_POST["password"])) {
-                $username = $_POST["username"];
-                $email = $_POST["email"];
-                $password = $_POST["password"];
-                register($username, $email, $password);
-            }
-
-            ?>
-
             <div class="row">
 
                 <div class="col-lg-4 col-lg-4 col-md-12 col-sm-12 mx-auto">
@@ -49,13 +38,24 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group mb-2">
+                                <div class="form-group mb-4">
                                     <label for="password" class="form-label"><b>Passwort <span class="text-danger">*</span></b></label>
                                     <input type="password" class="form-control shadow-none rounded-0" name="password" placeholder="Ihr Passwort ..." required>
                                     <div class="invalid-feedback">
                                         Bitte füllen Sie dieses Feld aus!
                                     </div>
                                 </div>
+
+                                <?php
+
+                                if (isset($_POST["submit"]) && isset($_POST["username"]) && isset($_POST["email"]) && isset($_POST["password"])) {
+                                    $username = $_POST["username"];
+                                    $email = $_POST["email"];
+                                    $password = $_POST["password"];
+                                    register($username, $email, $password);
+                                }
+
+                                ?>
 
                                 <div class="form-group mb-2 mt-4">
                                     <button type="submit" class="w-100 btn btn-dark shadow-none rounded-0" name="submit">Registrieren</button>
