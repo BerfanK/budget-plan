@@ -38,6 +38,29 @@
                     $incomeArray = array_filter($resultArray);
                     add_income($_SESSION["user_id"], $incomeArray);
 
+
+                } else if (isset($_POST["editOutcome"])) {
+
+                    $counter = 0;
+                    $arrayNumber = 0;
+                    $resultArray = array();
+
+                    foreach($_POST as $key => $value)
+                    {
+
+                
+                        $resultArray[$counter] = array();
+                        if (strpos($key, 'category') !== false) $resultArray[$arrayNumber]["category"] = $value;
+                        if (strpos($key, 'budget') !== false) $resultArray[$arrayNumber]["budget"] = $value;
+                        if (strpos($key, 'price') !== false) $resultArray[$arrayNumber]["price"] = $value;
+
+                        $counter++;
+                        if ($counter % 3 == 0) $arrayNumber++; 
+                    }
+
+                    $outcomeArray = array_filter($resultArray);
+                    add_outcome($_SESSION["user_id"], $outcomeArray);
+
                 }
 
                 ?>
@@ -158,20 +181,94 @@
 
                         <div class="row" id="row2">
 
-                            <div class="col-lg-5 col-xl-5 col-md-12 col-sm-12 mb-2">
-                                <label for="category" class="col-forum-lable"><b>Kategorie <span class="text-danger">*</span></b></label>
-                                <input type="text" name="category" class="form-control rounded-0 shadow-none" placeholder="Job" required>
-                            </div>
+                            <?php
 
-                            <div class="col-lg-3 col-xl-3 col-md-12 col-sm-12 mb-2">
-                                <label for="budget" class="col-forum-lable"><b>Budget <span class="text-danger">*</span></b></label>
-                                <input type="number" name="budget" class="form-control rounded-0 shadow-none" placeholder="3000" required>
-                            </div>
+                            $outcomesObj = user_outcomes($_SESSION["user_id"]);
+                            if ($outcomesObj == null) {
+                                echo
+                                '
+                                <div id="category2" class="col-lg-5 col-xl-5 col-md-12 col-sm-12 mb-2">
+                                    <label for="category" class="col-forum-lable"><b>Kategorie <span class="text-danger">*</span></b></label>
+                                    <input type="text" name="category2" class="form-control rounded-0 shadow-none" placeholder="Job" required>
+                                </div>
 
-                            <div class="col-lg-3 col-xl-3 col-md-12 col-sm-12 mb-2">
-                                <label for="price" class="col-forum-lable"><b>Kosten <span class="text-danger">*</span></b></label>
-                                <input type="number" name="price" class="form-control rounded-0 shadow-none" placeholder="1600" required>
-                            </div>
+                                <div id="budget2" class="col-lg-3 col-xl-3 col-md-12 col-sm-12 mb-2">
+                                    <label for="budget" class="col-forum-lable"><b>Budget <span class="text-danger">*</span></b></label>
+                                    <input type="number" name="budget2" class="form-control rounded-0 shadow-none" placeholder="3000" required>
+                                </div>
+
+                                <div id="price2" class="col-lg-3 col-xl-3 col-md-12 col-sm-12 mb-2">
+                                    <label for="price" class="col-forum-lable"><b>Kosten <span class="text-danger">*</span></b></label>
+                                    <input type="number" name="price2" class="form-control rounded-0 shadow-none" placeholder="1600" required>
+                                </div>
+                                ';
+                            } else {
+
+                                $counter = 0;
+                                while($outcome = $outcomesObj->fetch_assoc()) {
+
+                                    if ($counter == 0) {
+
+                                        echo
+                                        '
+                                        <div id="category2" class="col-lg-5 col-xl-5 col-md-12 col-sm-12 mb-2">
+                                            <label for="category" class="col-forum-lable"><b>Kategorie <span class="text-danger">*</span></b></label>
+                                            <input type="text" name="category2" class="form-control rounded-0 shadow-none" placeholder="Job" value="'. $outcome['category'] .'" required>
+                                        </div>
+
+                                        <div id="budget2" class="col-lg-3 col-xl-3 col-md-12 col-sm-12 mb-2">
+                                            <label for="budget" class="col-forum-lable"><b>Budget <span class="text-danger">*</span></b></label>
+                                            <input type="number" name="budget2" class="form-control rounded-0 shadow-none" placeholder="3000" value="'. $outcome['budget'] .'" required>
+                                        </div>
+
+                                        <div id="price2" class="col-lg-3 col-xl-3 col-md-12 col-sm-12 mb-2">
+                                            <label for="price" class="col-forum-lable"><b>Kosten <span class="text-danger">*</span></b></label>
+                                            <input type="number" name="price2" class="form-control rounded-0 shadow-none" placeholder="1600" value="'. $outcome['balance'] .'" required>
+                                        </div>
+                                        ';
+
+                                        $counter++;
+
+                                    } else {
+
+                                    
+                                        $token = uniqid();
+
+                                        echo
+                                        '
+                                        <hr id="hr2_' . $token . '" class="my-4">
+
+                                        <div id="category2_' . $token . '" class="col-lg-5 col-xl-5 col-md-12 col-sm-12 mb-2">
+                                            <label for="category" class="col-forum-lable"><b>Kategorie</b></label>
+                                            <input type="text" name="category2_' . $token . '" class="form-control rounded-0 shadow-none" placeholder="Job" value="'. $outcome['category'] .'" required>
+                                        </div>
+
+                                        <div id="budget2_' . $token . '" class="col-lg-3 col-xl-3 col-md-12 col-sm-12 mb-2">
+                                            <label for="budget" class="col-forum-lable"><b>Budget</b></label>
+                                            <input type="number" name="budget2_' . $token . '" class="form-control rounded-0 shadow-none" placeholder="3000" value="'. $outcome['budget'] .'" required>
+                                        </div>
+
+                                        <div id="price2_' . $token . '" class="col-lg-3 col-xl-3 col-md-12 col-sm-12 mb-2">
+                                            <label for="price" class="col-forum-lable"><b>Kosten</b></label>
+                                            <input type="number" name="price2_' . $token . '" class="form-control rounded-0 shadow-none" placeholder="1600" value="'. $outcome['balance'] .'" required>
+                                        </div>
+
+                                        <div id="remove2_' . $token . '" class="col-lg-1 col-xl-1 col-md-12 col-sm-12 mb-2">
+                                            <label for="' . $token . '" class="col-forum-lable">&nbsp;</label>
+                                            <button type="button"  id="' . $token . '" class="form-control removeObj2 btn btn-outline-danger rounded-0 shadow-none"><i class="fas fa-times"></i></button>
+                                        </div>
+                                        ';
+
+                                    }
+
+                                    
+
+
+                                }
+
+                            }
+
+                            ?>
 
                         </div>
                         <div class="row">
@@ -204,6 +301,25 @@
         <script>
             $(document).ready(function() {
 
+                var number = 1;
+                $('#add').click(function() {
+                    number++;
+                    $('#row').append('<hr id="hr_' + number + '" class="my-4"><div id="category_' + number + '" class="col-lg-6 col-xl-6 col-md-12 col-sm-12 mb-2"><label for="category_' + number + '" class="col-forum-lable"><b>Kategorie</b></label><input type="text" name="category_' + number + '" class="form-control rounded-0 shadow-none" placeholder="Job" required></div><div id="balance_' + number + '" class="col-lg-5 col-xl-5 col-md-12 col-sm-12 mb-2"><label for="balance_' + number + '" class="col-forum-lable"><b>Gehalt</b></label><input type="number" name="balance_' + number + '" class="form-control rounded-0 shadow-none" placeholder="8000" required></div><div id="remove_' + number + '" class="col-lg-1 col-xl-1 col-md-12 col-sm-12 mb-2"><label for="' + number + '" class="col-forum-lable">&nbsp;</label><button type="button"  id="' + number + '" class="form-control removeObj btn btn-outline-danger rounded-0 shadow-none"><i class="fas fa-times"></i></button></div>');
+                });
+            });
+
+            $(document).ready(function() {
+
+                var number = 1;
+                $('#add2').click(function() {
+                    number++;
+                    $('#row2').append('<hr id="hr2_' + number + '" class="my-4"><div id="category2_' + number + '" class="col-lg-5 col-xl-5 col-md-12 col-sm-12 mb-2"><label for="category2_' + number +'" class="col-forum-lable"><b>Kategorie</b></label><input type="text" name="category2_' + number + '" class="form-control rounded-0 shadow-none" placeholder="Job" required></div><div id="budget2_' + number +'" class="col-lg-3 col-xl-3 col-md-12 col-sm-12 mb-2"><label for="budget_' + number +'" class="col-forum-lable"><b>Budget</b></label><input type="number" name="budget_' + number + '" class="form-control rounded-0 shadow-none" placeholder="3000" required></div><div id="price2_' + number + '" class="col-lg-3 col-xl-3 col-md-12 col-sm-12 mb-2"><label for="price_' + number + '" class="col-forum-lable"><b>Kosten</b></label><input type="number" name="price_' + number + '" class="form-control rounded-0 shadow-none" placeholder="1600" required></div> <div id="remove2_' + number + '" class="col-lg-1 col-xl-1 col-md-12 col-sm-12 mb-2"><label for="' + number + '" class="col-forum-lable">&nbsp;</label><button type="button"  id="' + number + '" class="form-control removeObj2 btn btn-outline-danger rounded-0 shadow-none"><i class="fas fa-times"></i></button></div>');
+                });
+
+            });
+
+            $(document).ready(function() {
+
                 $(document).on('click', '.removeObj', function() {
                     var tokenId = $(this).attr('id');
                     $('#category_' + tokenId).remove();
@@ -213,44 +329,16 @@
                 });
 
             });
-        </script>
 
-        <script>
-            $(document).ready(function() {
+             $(document).ready(function() {
 
-                var number = 1;
-                $('#add').click(function() {
-                    number++;
-                    $('#row').append('<hr id="hr_' + number + '" class="my-4"><div id="category_' + number + '" class="col-lg-6 col-xl-6 col-md-12 col-sm-12 mb-2"><label for="category_' + number + '" class="col-forum-lable"><b>Kategorie</b></label><input type="text" name="category_' + number + '" class="form-control rounded-0 shadow-none" placeholder="Job" required></div><div id="balance_' + number + '" class="col-lg-5 col-xl-5 col-md-12 col-sm-12 mb-2"><label for="balance_' + number + '" class="col-forum-lable"><b>Gehalt</b></label><input type="number" name="balance_' + number + '" class="form-control rounded-0 shadow-none" placeholder="8000" required></div><div id="remove_' + number + '" class="col-lg-1 col-xl-1 col-md-12 col-sm-12 mb-2"><label for="' + number + '" class="col-forum-lable">&nbsp;</label><button type="button"  id="' + number + '" class="form-control remove btn btn-outline-danger rounded-0 shadow-none"><i class="fas fa-times"></i></button></div>');
-                });
-
-                $(document).on('click', '.remove', function() {
-                    var buttonId = $(this).attr("id");
-                    $('#category_' + buttonId).remove();
-                    $('#hr_' + buttonId).remove();
-                    $('#balance_' + buttonId).remove();
-                    $('#remove_' + buttonId).remove();
-                });
-
-            });
-        </script>
-
-        <script>
-            $(document).ready(function() {
-
-                var number = 1;
-                $('#add2').click(function() {
-                    number++;
-                    $('#row2').append('<hr id="hr2_' + number + '" class="my-4"><div id="category2_' + number + '" class="col-lg-5 col-xl-5 col-md-12 col-sm-12 mb-2"><label for="category2_' + number +'" class="col-forum-lable"><b>Kategorie <span class="text-danger">*</span></b></label><input type="text" name="category2_' + number + '" class="form-control rounded-0 shadow-none" placeholder="Job" required></div><div id="budget_' + number +'" class="col-lg-3 col-xl-3 col-md-12 col-sm-12 mb-2"><label for="budget_' + number +'" class="col-forum-lable"><b>Budget <span class="text-danger">*</span></b></label><input type="number" name="budget_' + number + '" class="form-control rounded-0 shadow-none" placeholder="3000" required></div><div id="price_' + number + '" class="col-lg-3 col-xl-3 col-md-12 col-sm-12 mb-2"><label for="price_' + number + '" class="col-forum-lable"><b>Kosten <span class="text-danger">*</span></b></label><input type="number" name="price_' + number + '" class="form-control rounded-0 shadow-none" placeholder="1600" required></div> <div id="remove_' + number + '" class="col-lg-1 col-xl-1 col-md-12 col-sm-12 mb-2"><label for="' + number + '" class="col-forum-lable">&nbsp;</label><button type="button"  id="' + number + '" class="form-control remove2 btn btn-outline-danger rounded-0 shadow-none"><i class="fas fa-times"></i></button></div>');
-                });
-
-                $(document).on('click', '.remove2', function() {
-                    var buttonId = $(this).attr("id");
-                    $('#category2_' + buttonId).remove();
-                    $('#hr2_' + buttonId).remove()
-                    $('#price_' + buttonId).remove();
-                    $('#budget_' + buttonId).remove();
-                    $('#remove_' + buttonId).remove();
+                $(document).on('click', '.removeObj2', function() {
+                    var tokenId = $(this).attr('id');
+                    $('#category2_' + tokenId).remove();
+                    $('#hr2_' + tokenId).remove();
+                    $('#budget2_' + tokenId).remove();
+                    $('#price2_' + tokenId).remove();
+                    $('#remove2_' + tokenId).remove();
                 });
 
             });

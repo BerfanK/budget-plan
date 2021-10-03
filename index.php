@@ -3,6 +3,19 @@
  
     <?php include_once "imports/head.php"; ?>
 
+    <?php
+
+    $userId = $_SESSION["user_id"];
+    $incomeBalance = number_format((float) income_balance_total($userId), 0, ",", "'");
+    $outcomeBudget =  number_format((float) outcome_budget_total($userId), 0, ",", "'");
+    $outcomeBalance = number_format((float) outcome_balance_total($userId), 0, ",", "'");
+    $remainingBalance = number_format((float) (income_balance_total($userId) - outcome_balance_total($userId)), 0, ",", "'");
+
+    $incomeResult = user_incomes($userId);
+    $outcomeResult = user_outcomes($userId); 
+
+    ?>
+
     <body>
         <?php include_once "imports/navbar.php"; ?>
 
@@ -20,19 +33,19 @@
 
                     <div>
                         <span class="card-input">Einkommen</span>
-                        <span class="card-value">CHF <span class="balance">6'150</span></span>
+                        <span class="card-value">CHF <span class="balance"><?=$incomeBalance?></span></span>
                     </div>
 
                     <div>
                         <span class="card-input">Ausgaben</span>
-                        <span class="card-value">CHF <span class="balance">1'320</span></span>
+                        <span class="card-value">CHF <span class="balance"><?=$outcomeBalance?></span></span>
                     </div>
 
                     <hr>
 
                     <div>
                         <span class="card-input">Übriges Gehalt</span>
-                        <span class="card-value fw-bold">CHF <span class="balance">4'830</span></span>
+                        <span class="card-value fw-bold">CHF <span class="balance"><?=$remainingBalance?></span></span>
                     </div>
 
                 </div>
@@ -44,26 +57,28 @@
             <div class="card mb-5 rounded-0">
                 <div class="card-body">
 
-                    <div>
-                        <span class="card-input">Einkommen</span>
-                        <span class="card-value">CHF <span class="balance">4'000</span></span>
-                    </div>
+                    <?php
 
-                    <div>
-                        <span class="card-input">Eltern</span>
-                        <span class="card-value">CHF <span class="balance">150</span></span>
-                    </div>
+                    while ($incomeObj = $incomeResult->fetch_assoc()) {
+                        $category = $incomeObj['category'];
+                        $balance = $incomeObj['balance'];
 
-                    <div>
-                        <span class="card-input">Anderes</span>
-                        <span class="card-value">CHF <span class="balance">2'000</span></span>
-                    </div>
+                        echo
+                        '
+                        <div>
+                            <span class="card-input">'. $category .'</span>
+                            <span class="card-value">CHF <span class="balance">'. $balance .'</span></span>
+                        </div>
+                        ';
+                    }
+
+                    ?>
 
                     <hr>
 
                     <div>
                         <span class="card-input">Total Gehalt</span>
-                        <span class="card-value fw-bold">CHF <span class="balance">6'150</span></span>
+                        <span class="card-value fw-bold">CHF <span class="balance"><?=$incomeBalance?></span></span>
                     </div>
                 
                 </div>
@@ -90,26 +105,32 @@
 
                         <tbody>
 
-                            <tr>
-                                <td><span class="card-value fw-bold">Führerschein</span></td>
-                                <td><span class="card-value">CHF <span class="balance">900</span></span></td>
-                                <td><span class="card-value">CHF <span class="balance">1'200</span></span></td>
-                                <td><span class="card-value text-danger">CHF <span class="balance">300</span></span></td>
-                            </tr>
+                            <?php
 
-                            <tr>
-                                <td><span class="card-value fw-bold">Unterhaltung</span></td>
-                                <td><span class="card-value">CHF <span class="balance">25</span></span></td>
-                                <td><span class="card-value">CHF <span class="balance">20</span></span></td>
-                                <td><span class="card-value text-success">CHF <span class="balance">5</span></span></td>
-                            </tr>
+                            $totalDifference = 0;
+                            while ($outcomeObj = $outcomeResult->fetch_assoc()) {
+                                $category = $outcomeObj['category'];
+                                $budget = $outcomeObj['budget'];
+                                $balance = $outcomeObj['balance'];
+                                
+                                $difference = $budget - $balance;
+                                $totalDifference += $difference;
+                                
+                                $differenceHtml = "text-success";
+                                if ($difference < 0) $differenceHtml = "text-danger";
 
-                            <tr>
-                                <td><span class="card-value fw-bold">Lebensmittel</span></td>
-                                <td><span class="card-value">CHF <span class="balance">500</span></span></td>
-                                <td><span class="card-value">CHF <span class="balance">100</span></span></td>
-                                <td><span class="card-value text-success">CHF <span class="balance">400</span></span></td>
-                            </tr>
+                                echo
+                                '
+                                <tr>
+                                    <td><span class="card-value fw-bold">'. $category .'</span></td>
+                                    <td><span class="card-value">CHF <span class="balance">'. $budget .'</span></span></td>
+                                    <td><span class="card-value">CHF <span class="balance">'. $balance .'</span></span></td>
+                                    <td><span class="card-value '. $differenceHtml .'">CHF <span class="balance">'. $difference .'</span></span></td>
+                                </tr>
+                                ';
+                            }
+
+                            ?>
 
                             <tr>
                                 <td>&nbsp;</td>
@@ -120,9 +141,9 @@
 
                             <tr>
                                 <td><span class="card-value fw-bold">Gesamt</span></td>
-                                <td><span class="card-value fw-bold">CHF <span class="balance">1'425</span></span></td>
-                                <td><span class="card-value fw-bold">CHF <span class="balance">1'320</span></span></td>
-                                <td><span class="card-value fw-bold">CHF <span class="balance">105</span></span></td>
+                                <td><span class="card-value fw-bold">CHF <span class="balance"><?=$outcomeBudget?></span></span></td>
+                                <td><span class="card-value fw-bold">CHF <span class="balance"><?=$outcomeBalance?></span></span></td>
+                                <td><span class="card-value fw-bold">CHF <span class="balance"><?=$totalDifference?></span></span></td>
                             </tr>
                         </tbody>
 

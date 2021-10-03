@@ -151,9 +151,8 @@ function user_incomes($userId) {
 }
 
 /**
- * Checks if a category income exists on a user.
+ * Clears the users incomes.
  * @param userId The id of the user (int)
- * @param category The name of the category (string)
  */
 function clear_incomes($userId) {
     global $conn;
@@ -184,7 +183,109 @@ function add_income($userId, $incomes) {
     }
 
     print_success("Ihre Einnahmen wurden erfolgreich aktualisiert!");
+}
 
+/**
+ * Gets all user outcomes.
+ * @param userId The id of the user (int)
+ */
+function user_outcomes($userId) {
+    global $conn;
+
+    $statement = $conn->prepare("SELECT * FROM account_outcomes WHERE user_id = ?");
+    $statement->bind_param("i", $userId);
+    $statement->execute();
+
+    $result = $statement->get_result();
+    if ($result->num_rows == 0) return null;
+    return $result;
+}
+
+/**
+ * Clears the users outcomes.
+ * @param userId The id of the user (int)
+ */
+function clear_outcomes($userId) {
+    global $conn;
+
+    $statement = $conn->prepare("DELETE FROM account_outcomes WHERE user_id = ?");
+    $statement->bind_param("i", $userId);
+    $statement->execute();
+}
+
+
+/**
+ * Adds an income of a user.
+ * @param userId The id of the user (int)
+ * @param incomes The incomes of the user (array: category => balance)
+ */
+function add_outcome($userId, $outcomes) {
+    global $conn;
+
+    clear_outcomes($userId);
+
+    for ($i = 0; $i < count($outcomes); $i++) {
+        $category = $outcomes[$i]['category'];
+        $budget = $outcomes[$i]['budget'];
+        $balance = $outcomes[$i]['price'];
+
+        $statement = $conn->prepare("INSERT INTO account_outcomes(user_id, category, budget, balance) VALUES(?, ?, ?, ?)");
+        $statement->bind_param("isss", $userId, $category, $budget, $balance);
+        $statement->execute();
+    }
+
+    print_success("Ihre Ausgaben wurden erfolgreich aktualisiert!");
+}
+
+/**
+ * Gets the sum of incomes.
+ * @param userId The id of the user (int)
+ */
+function income_balance_total($userId) {
+    global $conn;
+
+    $statement = $conn->prepare("SELECT SUM(balance) AS total FROM account_incomes WHERE user_id = ?");
+    $statement->bind_param("i", $userId);
+    $statement->execute();
+
+    $result = $statement->get_result();
+    $row = $result->fetch_assoc();
+
+    return $row['total'];
+}
+
+/**
+ * Gets the sum of outcome (price).
+ * @param userId The id of the user (int)
+ */
+function outcome_balance_total($userId) {
+    global $conn;
+
+    $statement = $conn->prepare("SELECT SUM(balance) AS total FROM account_outcomes WHERE user_id = ?");
+    $statement->bind_param("i", $userId);
+    $statement->execute();
+
+    $result = $statement->get_result();
+    $row = $result->fetch_assoc();
+
+    return $row['total'];
+}
+
+/**
+ * Gets the sum of outcome (budget).
+ * @param userId The id of the user (int)
+ */
+function outcome_budget_total($userId) {
+    global $conn;
+
+    $statement = $conn->prepare("SELECT SUM(budget) AS total FROM account_outcomes WHERE user_id = ?");
+    $statement->bind_param("i", $userId);
+    $statement->execute();
+
+    $result = $statement->get_result();
+    $row = $result->fetch_assoc();
+
+    return $row['total'];
 }
 
 ?>
