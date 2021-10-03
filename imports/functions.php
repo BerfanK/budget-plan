@@ -134,4 +134,57 @@ function username_exists($username) {
     return $result->num_rows != 0;
 }
 
+/**
+ * Gets all user incomes.
+ * @param userId The id of the user
+ */
+function user_incomes($userId) {
+    global $conn;
+
+    $statement = $conn->prepare("SELECT * FROM account_incomes WHERE user_id = ?");
+    $statement->bind_param("i", $userId);
+    $statement->execute();
+
+    $result = $statement->get_result();
+    if ($result->num_rows == 0) return null;
+    return $result;
+}
+
+/**
+ * Checks if a category income exists on a user.
+ * @param userId The id of the user (int)
+ * @param category The name of the category (string)
+ */
+function clear_incomes($userId) {
+    global $conn;
+
+    $statement = $conn->prepare("DELETE FROM account_incomes WHERE user_id = ?");
+    $statement->bind_param("i", $userId);
+    $statement->execute();
+}
+
+
+/**
+ * Adds an income of a user.
+ * @param userId The id of the user (int)
+ * @param incomes The incomes of the user (array: category => balance)
+ */
+function add_income($userId, $incomes) {
+    global $conn;
+
+    clear_incomes($userId);
+
+    for ($i = 0; $i < count($incomes); $i++) {
+        $category = $incomes[$i]['category'];
+        $balance = $incomes[$i]['balance'];
+
+        $statement = $conn->prepare("INSERT INTO account_incomes(user_id, category, balance) VALUES(?, ?, ?)");
+        $statement->bind_param("iss", $userId, $category, $balance);
+        $statement->execute();
+    }
+
+    print_success("Ihre Einnahmen wurden erfolgreich aktualisiert!");
+
+}
+
 ?>
