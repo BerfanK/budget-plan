@@ -22,7 +22,7 @@
         <div class="container my-5">
 
             <div class="title">Ihr Budgetplan</div>
-            <div class="title-text">Einblick über Ihre Ein- und Ausgaben.</div>
+            <div class="title-text">Einblick über Ihre Einnahmen und Ausgaben.</div>
 
             <hr class="mt-3 mb-5">
 
